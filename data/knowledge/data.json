@@ -1,0 +1,40 @@
+{
+    "entries": [
+        {
+            "id": "1",
+            "content": "What is the retention period for logs? How long are logs retained?",
+            "metadata": {
+                "question": "What is the retention period for log retention? How long are logs retained?",
+                "answer": "We save the activity logs during 3 years at least.",
+                "owner": "Legal"
+            }
+        },
+        {
+            "id": "2",
+            "content": "Is the data stored within the EU, Europe, for GDPR compliance?",
+            "metadata": {
+                "question": "Is the data stored within the EU, Europe, for GDPR compliance?",
+                "answer": "All our customer data is stored on the servers of Amazon Web Services (AWS) in Frankfurt, Germany.",
+                "owner": "Security"
+            }
+        },
+        {
+            "id": "3",
+            "content": " Can backups/restores be performed hot and without disconnecting users?",
+            "metadata": {
+                "question": "Can backups/restores be performed hot and without disconnecting users?",
+                "answer": "Backups can be restored without an impact to the application's users thanks to blue-green deployment systems.",
+                "owner": "Infrastructure"
+            }
+        },
+        {
+            "id": "4",
+            "content": "Does the entity have a procedure for managing removable media, in accordance with the classification scheme adopted by the organization?",
+            "metadata": {
+                "question": "Does the entity have a procedure for managing removable media, in accordance with the classification scheme adopted by the organization?",
+                "answer": "We are ISO27001 compliant and have the related policy and procedures in place, which cover the removable media, mobile device management, software installation and overall employee security processes.",
+                "owner": "IT"
+            }
+        }
+    ]
+}

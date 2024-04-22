@@ -1,0 +1,33 @@
+version: '3'
+services:
+  embedding_database:
+    image: ghcr.io/chroma-core/chroma:latest
+    environment:
+      - IS_PERSISTENT=TRUE
+    volumes:
+      - ./data/chroma/chroma:/chroma/chroma/
+    ports:
+      - 8000:8000
+  api_backend:
+    image: oracle_backend
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    environment:
+      - POPULATE_CHROMA=True # Change to 'False' if you don't want to replace embedding database contents or if it already exists
+      - CHROMA_HOST=embedding_database
+      - CHROMA_PORT=8000
+      - UVICORN_PORT=8080
+      - KNOWLEDGE_DATA_FILE=/data/knowledge/data.json
+    volumes:
+      - ./data/knowledge/:/data/knowledge/
+      - ./data/backend/chroma_cache:/root/.cache/chroma/
+    ports:
+      - 8080:8080
+  app_frontend:
+    image: oracle_frontend
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    ports:
+      - 3000:80
