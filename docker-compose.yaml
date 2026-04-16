@@ -20,7 +20,6 @@ services:
       - SYNC_INTERVAL_SECONDS=300
     volumes:
       - ./data/knowledge/:/data/knowledge/
-      - ./data/backend/chroma_cache:/root/.cache/chroma/
     depends_on:
       - embedding_database
   api_backend:
