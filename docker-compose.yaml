@@ -28,6 +28,7 @@ services:
     environment:
       - CHROMA_HOST=embedding_database
       - CHROMA_PORT=8000
+      - CONFIDENCE_THRESHOLD=30
     ports:
       - 8080:8080
     depends_on:
