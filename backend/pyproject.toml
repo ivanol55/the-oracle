@@ -1,0 +1,18 @@
+[project]
+name = "the-oracle"
+version = "0.1.0"
+description = "Semantic search knowledge base for answering RFP questions"
+requires-python = ">=3.11"
+dependencies = [
+    "chromadb==0.6.3",
+    "fastapi==0.115.12",
+    "pydantic==2.11.1",
+    "uvicorn==0.34.2",
+]
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

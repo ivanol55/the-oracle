@@ -1,4 +1,0 @@
-chromadb==0.6.3
-fastapi==0.115.12
-pydantic==2.11.1
-uvicorn==0.34.2

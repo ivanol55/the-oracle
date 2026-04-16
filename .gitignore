@@ -1,2 +1,18 @@
+# Data (keep knowledge base tracked)
 data/*
 !data/knowledge
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store

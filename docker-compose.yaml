@@ -14,7 +14,7 @@ services:
       context: backend
       dockerfile: Dockerfile
     environment:
-      - FORCE_REPOPULATE=False # Set to 'True' to force-recycle the collection from the data file
+      - POPULATE_CHROMA=False # Set to 'True' to force-recycle the collection from the data file
       - CHROMA_HOST=embedding_database
       - CHROMA_PORT=8000
       - UVICORN_PORT=8080
