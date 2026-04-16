@@ -11,43 +11,75 @@ const { title } = Astro.props;
 <html lang="en" transition:animate="slide">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="description" content="Network(ing) cards, so you can follow up with your new contacts" />
+		<meta name="description" content="Semantic search knowledge base for answering compliance questions" />
 		<meta name="viewport" content="width=device-width" />
 		<ViewTransitions />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
 	<body>
+		<div class="bg-glow"></div>
 		<slot />
 	</body>
 </html>
 <style is:global>
 	:root {
-		--accent: 62, 55, 201;
-		--accent-light: 168, 172, 255; 
+		--accent: 124, 58, 237;
+		--accent-light: 167, 139, 250;
 		--accent-dark: 49, 10, 101;
 		--accent-gradient: linear-gradient(
-			45deg,
+			135deg,
 			rgb(var(--accent)),
-			rgb(var(--accent-light)) 30%,
-			white 60%
+			rgb(var(--accent-light)) 40%,
+			#e0e7ff 100%
 		);
+		--surface: rgba(255, 255, 255, 0.04);
+		--surface-border: rgba(255, 255, 255, 0.08);
+		--surface-hover: rgba(255, 255, 255, 0.07);
+		--text-primary: #f1f5f9;
+		--text-secondary: #94a3b8;
+		--success: 52, 211, 153;
+		--warning: 251, 191, 36;
+		--danger: 248, 113, 113;
+	}
+	* {
+		box-sizing: border-box;
 	}
 	html {
-		font-family: system-ui, sans-serif;
-		background: #13151a;
-		background-size: 224px;
+		font-family: 'Inter', system-ui, sans-serif;
+		background: #0b0f1a;
+		color: var(--text-primary);
+		-webkit-font-smoothing: antialiased;
+	}
+	body {
+		margin: 0;
+		min-height: 100vh;
+		position: relative;
+		overflow-x: hidden;
+	}
+	.bg-glow {
+		position: fixed;
+		top: -40%;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 80vw;
+		height: 60vh;
+		background: radial-gradient(ellipse, rgba(var(--accent), 0.12) 0%, transparent 70%);
+		pointer-events: none;
+		z-index: 0;
 	}
 	code {
 		font-family:
+			'SF Mono',
 			Menlo,
 			Monaco,
-			Lucida Console,
-			Liberation Mono,
-			DejaVu Sans Mono,
-			Bitstream Vera Sans Mono,
-			Courier New,
+			'Cascadia Code',
+			'Courier New',
 			monospace;
+		font-size: 0.85em;
 	}
 </style>
