@@ -19,9 +19,9 @@ def sync_knowledge(client, entries: list[dict]) -> int:
 
     collection.upsert(
         ids=[e["id"] for e in entries],
-        documents=[e["question"] for e in entries],
+        documents=[e["questions"] for e in entries],
         metadatas=[
-            {"question": e["question"], "answer": e["answer"], "owner": e["owner"]}
+            {"question": e["questions"], "answer": e["answer"], "owner": e["owner"]}
             for e in entries
         ],
     )

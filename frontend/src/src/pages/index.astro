@@ -28,6 +28,18 @@ import Layout from '../layouts/Layout.astro';
 		<p class="response text-justify w-full" id="response-container">
 			The <code>oracle's wisdom</code> will be displayed once the search is done
 		</p>
+
+		<div class="bulk-banner">
+			<p><strong>Got a lot of questions?</strong>
+				<a href="http://localhost:8080/template" class="bulk-link">Download the CSV template</a>,
+				fill in your questions, and upload it to get answers in bulk.
+			</p>
+			<form id="bulk-form" class="mt-4 flex items-center gap-4">
+				<input type="file" id="bulk-file" accept=".csv" class="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-600 file:text-white hover:file:bg-blue-700 file:cursor-pointer"/>
+				<input type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer" value="Upload and get answers"/>
+			</form>
+			<p id="bulk-status" class="mt-2 text-sm"></p>
+		</div>
 	</main>
 
 	<script>
@@ -47,9 +59,55 @@ import Layout from '../layouts/Layout.astro';
 			body: JSON.stringify({ question })
 		  })
 		  .then(response => response.json())
-		  .then(data => {document.getElementById('response-container')!.innerHTML = data.response.metadata.answer + "<br/><br/> If you need more information, this response is assigned to the following team: <code>" + data.response.metadata.owner + "</code>";})
+		  .then(data => {
+		const container = document.getElementById('response-container')!;
+		if (!data.response) {
+		  container.innerHTML = "The Oracle doesn't have a confident answer for that question. Try rephrasing, or reach out to the team directly.";
+		} else {
+		  container.innerHTML = data.response.metadata.answer
+			+ "<br/><br/><code>Confidence: " + data.response.confidence + "%</code>"
+			+ " &middot; Assigned to: <code>" + data.response.metadata.owner + "</code>";
+		}
+	  })
 		  .catch(error => {
 			console.error('Error:', error);
+		  });
+		});
+
+		document.getElementById('bulk-form')?.addEventListener('submit', function(event) {
+		  event.preventDefault();
+		  const fileInput = document.getElementById('bulk-file') as HTMLInputElement;
+		  const status = document.getElementById('bulk-status')!;
+
+		  if (!fileInput.files || !fileInput.files[0]) {
+			status.textContent = 'Please select a CSV file first.';
+			return;
+		  }
+
+		  status.textContent = 'Processing...';
+		  const formData = new FormData();
+		  formData.append('file', fileInput.files[0]);
+
+		  fetch('http://localhost:8080/bulk', {
+			method: 'POST',
+			body: formData,
+		  })
+		  .then(response => {
+			if (!response.ok) throw new Error('Upload failed');
+			return response.blob();
+		  })
+		  .then(blob => {
+			const url = URL.createObjectURL(blob);
+			const a = document.createElement('a');
+			a.href = url;
+			a.download = 'oracle_answers.csv';
+			a.click();
+			URL.revokeObjectURL(url);
+			status.textContent = 'Done! Your answers file has been downloaded.';
+		  })
+		  .catch(error => {
+			console.error('Error:', error);
+			status.textContent = 'Something went wrong. Please try again.';
 		  });
 		});
 	  </script>
@@ -110,6 +168,17 @@ import Layout from '../layouts/Layout.astro';
 		background: #eb4961;
 		padding: 1.5rem;
 		border-radius: 8px;
+	}
+	.bulk-banner {
+		margin-bottom: 2rem;
+		border: 1px solid rgba(var(--accent-light), 25%);
+		background: linear-gradient(rgba(var(--accent-dark), 66%), rgba(var(--accent-dark), 33%));
+		padding: 1.5rem;
+		border-radius: 8px;
+	}
+	.bulk-link {
+		color: rgb(var(--accent-light));
+		text-decoration: underline;
 	}
 	.response code {
 		font-size: 0.8em;

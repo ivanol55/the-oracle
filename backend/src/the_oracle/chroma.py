@@ -24,13 +24,22 @@ def get_client() -> chromadb.HttpClient:
     return chromadb.HttpClient(host=host, port=port)
 
 
-def search_by_proximity(documents_collection, question_text: str) -> dict:
+def search_by_proximity(documents_collection, question_text: str, confidence_threshold: int = 40) -> dict | None:
     response = documents_collection.query(
         query_texts=[question_text],
         n_results=1,
+        include=["documents", "metadatas", "distances"],
     )
+
+    distance = response["distances"][0][0]
+    confidence = round(max(0, (1 - distance / 2)) * 100)
+
+    if confidence < confidence_threshold:
+        return None
+
     return {
         "id": response["ids"][0][0],
         "content": response["documents"][0][0],
         "metadata": response["metadatas"][0][0],
+        "confidence": confidence,
     }
