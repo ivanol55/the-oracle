@@ -15,18 +15,30 @@ SOURCES = {
 
 
 def sync_knowledge(client, entries: list[dict]) -> int:
-    collection = client.get_or_create_collection(name="documents")
-
-    collection.upsert(
-        ids=[e["id"] for e in entries],
-        documents=[e["questions"] for e in entries],
-        metadatas=[
-            {"question": e["questions"], "answer": e["answer"], "owner": e["owner"]}
-            for e in entries
-        ],
+    collection = client.get_or_create_collection(
+        name="documents",
+        metadata={"hnsw:space": "cosine"},
     )
 
-    return len(entries)
+    ids = []
+    documents = []
+    metadatas = []
+
+    for entry in entries:
+        questions = [q.strip() for q in entry["questions"].split("|") if q.strip()]
+        meta = {
+            "question": entry["questions"],
+            "answer": entry["answer"],
+            "owner": entry["owner"],
+        }
+        for i, question in enumerate(questions):
+            ids.append(f"{entry['id']}_{i}")
+            documents.append(question)
+            metadatas.append(meta)
+
+    collection.upsert(ids=ids, documents=documents, metadatas=metadatas)
+
+    return len(documents)
 
 
 def main():

@@ -32,7 +32,7 @@ def search_by_proximity(documents_collection, question_text: str, confidence_thr
     )
 
     distance = response["distances"][0][0]
-    confidence = round(max(0, (1 - distance / 2)) * 100)
+    confidence = round(max(0, (1 - distance)) * 100)
 
     if confidence < confidence_threshold:
         return None
