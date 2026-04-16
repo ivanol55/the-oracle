@@ -1,7 +1,7 @@
 version: '3'
 services:
   embedding_database:
-    image: ghcr.io/chroma-core/chroma:latest
+    image: ghcr.io/chroma-core/chroma:0.6.3
     environment:
       - IS_PERSISTENT=TRUE
     volumes:
@@ -14,7 +14,7 @@ services:
       context: backend
       dockerfile: Dockerfile
     environment:
-      - POPULATE_CHROMA=True # Change to 'False' if you don't want to replace embedding database contents or if it already exists
+      - FORCE_REPOPULATE=False # Set to 'True' to force-recycle the collection from the data file
       - CHROMA_HOST=embedding_database
       - CHROMA_PORT=8000
       - UVICORN_PORT=8080

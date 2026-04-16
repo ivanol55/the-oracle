@@ -1,7 +1,9 @@
-FROM node:lts AS build
+FROM node:22-slim AS build
 WORKDIR /app
+
+COPY ./src/package.json ./src/package-lock.json* ./
+RUN npm install
 COPY ./src .
-RUN npm i
 RUN npm run build
 
 FROM httpd:2.4 AS runtime
