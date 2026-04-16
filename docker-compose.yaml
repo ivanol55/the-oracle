@@ -1,4 +1,3 @@
-version: '3'
 services:
   embedding_database:
     image: ghcr.io/chroma-core/chroma:0.6.3
