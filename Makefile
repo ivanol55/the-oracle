@@ -1,4 +1,4 @@
-.PHONY: up down build logs
+.PHONY: up down build logs restart sync-logs
 
 build:
 	docker compose build
@@ -12,7 +12,7 @@ down:
 logs:
 	docker compose logs -f
 
-restart: down up
+sync-logs:
+	docker compose logs -f data_sync
 
-populate:
-	POPULATE_CHROMA=True docker compose up -d api_backend
+restart: down up

@@ -1,12 +1,23 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from the_oracle.chroma import connect, search_by_proximity
+from the_oracle.chroma import get_client, search_by_proximity
 
-chroma_client, documents_collection = connect()
+chroma_client = None
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global chroma_client
+    chroma_client = get_client()
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -28,6 +39,14 @@ async def root():
 
 @app.post("/ask")
 async def ask(request_payload: QuestionRequest):
+    try:
+        collection = chroma_client.get_collection("documents")
+    except Exception:
+        return JSONResponse(
+            status_code=503,
+            content={"error": "Knowledge base not synced yet"},
+        )
+
     question_text = request_payload.question
-    response = search_by_proximity(documents_collection, question_text)
+    response = search_by_proximity(collection, question_text)
     return {"question": question_text, "response": response}

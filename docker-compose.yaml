@@ -8,22 +8,31 @@ services:
       - ./data/chroma/chroma:/chroma/chroma/
     ports:
       - 8000:8000
-  api_backend:
+  data_sync:
     image: oracle_backend
     build:
       context: backend
       dockerfile: Dockerfile
+    command: ["python", "-m", "the_oracle.sync"]
     environment:
-      - POPULATE_CHROMA=False # Set to 'True' to force-recycle the collection from the data file
       - CHROMA_HOST=embedding_database
       - CHROMA_PORT=8000
-      - UVICORN_PORT=8080
-      - KNOWLEDGE_DATA_FILE=/data/knowledge/data.json
+      - SYNC_SOURCE=json
+      - SYNC_INTERVAL_SECONDS=300
     volumes:
       - ./data/knowledge/:/data/knowledge/
       - ./data/backend/chroma_cache:/root/.cache/chroma/
+    depends_on:
+      - embedding_database
+  api_backend:
+    image: oracle_backend
+    environment:
+      - CHROMA_HOST=embedding_database
+      - CHROMA_PORT=8000
     ports:
       - 8080:8080
+    depends_on:
+      - embedding_database
   app_frontend:
     image: oracle_frontend
     build:
